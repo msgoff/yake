@@ -33,7 +33,7 @@ class TextHighlighter:
         if len(keywords) > 0:
             kw_list = keywords
 
-            if type(keywords[0]) == tuple:
+            if isinstance(keywords[0], tuple):
                 kw_list = [x[0] for x in keywords]
 
             text = text.strip()
@@ -48,12 +48,10 @@ class TextHighlighter:
         text_tokens = text.replace("\n", " ").split(" ")
         relevant_words_array = [kw.lower() for kw in relevant_words_array]
         try:
-            for tk in range(len(text_tokens)):
-                kw = re.sub(
-                    '[!",:.;?()]$|^[!",:.;?()]|\W["!,:.;?()]', "", text_tokens[tk]
-                )
+            for ix, tk in enumerate(text_tokens):
+                kw = re.sub(r'[!",:.;?()]$|^[!",:.;?()]|\W["!,:.;?()]', "", tk)
                 if kw.lower() in relevant_words_array:
-                    text_tokens[tk] = text_tokens[tk].replace(
+                    text_tokens[ix] = tk.replace(
                         kw, self.highlight_pre + kw + self.highlight_post
                     )
         except:
@@ -182,7 +180,7 @@ class TextHighlighter:
         for i in range(n_gram):
             temporary_list.append(text_tokens[y : y + i + 1])
             k = re.sub(
-                """[!",:.;?()]$|^[!",':.;?()]|\W["!,:.;?()]""",
+                r"""[!",:.;?()]$|^[!",':.;?()]|\W["!,:.;?()]""",
                 "",
                 " ".join(temporary_list[i]),
             )
@@ -206,7 +204,7 @@ class TextHighlighter:
         txt = " ".join(text_tokens[y : y + len(n_gram_word_list[0].split(" "))])
 
         new_expression = txt.replace(
-            re.sub('[!",:.;?()]$|^[!",:.;?()]|\W["!,:.;?()]', "", txt),
+            re.sub(r'[!",:.;?()]$|^[!",:.;?()]|\W["!,:.;?()]', "", txt),
             self.highlight_pre + n_gram_word_list[0] + self.highlight_post,
         )
         y += len(n_gram_word_list[0].split(" "))

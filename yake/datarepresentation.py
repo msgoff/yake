@@ -490,7 +490,7 @@ class single_word:
 
     @property
     def WIR(self):
-        return sum([d["TF"] for (u, v, d) in self.G.out_edges(self.id, data=True)])
+        return sum(d["TF"] for (u, v, d) in self.G.out_edges(self.id, data=True))
 
     @property
     def PWR(self):
@@ -505,7 +505,7 @@ class single_word:
 
     @property
     def WIL(self):
-        return sum([d["TF"] for (u, v, d) in self.G.in_edges(self.id, data=True)])
+        return sum(d["TF"] for (u, v, d) in self.G.in_edges(self.id, data=True))
 
     @property
     def PWL(self):

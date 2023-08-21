@@ -27,7 +27,7 @@ class KeywordExtractor:
         language = lan[:2].lower()
         local_path = os.path.join("StopwordsList", f"stopwords_{language}.txt")
 
-        if os.path.exists(os.path.join(dir_path, local_path)) == False:
+        if os.path.exists(os.path.join(dir_path, local_path)) is False:
             local_path = os.path.join("StopwordsList", "stopwords_noLang.txt")
 
         resource_path = os.path.join(dir_path, local_path)
