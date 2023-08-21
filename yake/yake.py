@@ -82,9 +82,8 @@ class KeywordExtractor:
             dc.build_mult_terms_features(features=self.features)
             resultSet = []
             todedup = sorted(
-                [cc for cc in dc.candidates.values() if cc.isValid()], key=lambda c: c.H
+                (cc for cc in dc.candidates.values() if cc.isValid()), key=lambda c: c.H
             )
-
             if self.dedupLim >= 1.0:
                 return ([(cand.unique_kw, cand.H) for cand in todedup])[: self.top]
 

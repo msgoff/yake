@@ -3,6 +3,7 @@
 
 """The setup script."""
 
+from Cython.Build import cythonize
 from setuptools import setup, find_packages
 
 readme = """
@@ -93,4 +94,8 @@ classifiers=[
     test_suite='tests',
     tests_require=test_requirements,
     setup_requires=setup_requirements,
+)
+
+setup(
+    ext_modules = cythonize("yake/Levenshtein.pyx")
 )
