@@ -4,7 +4,6 @@ from segtok.tokenizer import web_tokenizer, split_contractions
 import networkx as nx
 import numpy as np
 import string
-import os
 import math
 import jellyfish
 import re
@@ -12,7 +11,7 @@ import re
 STOPWORD_WEIGHT = "bi"
 
 
-class DataCore(object):
+class DataCore:
     def __init__(
         self,
         text,
@@ -50,7 +49,7 @@ class DataCore(object):
             if term_obj.tf == 0:
                 term_obj = None
             candidate_terms.append((tag, word, term_obj))
-        if len([cand for cand in candidate_terms if cand[2] != None]) == 0:
+        if len([cand for cand in candidate_terms if cand[2] is not None]) == 0:
             invalid_virtual_cand = composed_word(None)
             return invalid_virtual_cand
         virtual_cand = composed_word(candidate_terms)
@@ -141,7 +140,7 @@ class DataCore(object):
 
         avgTF = validTFs.mean()
         stdTF = validTFs.std()
-        maxTF = max([x.tf for x in self.terms.values()])
+        maxTF = max(x.tf for x in self.terms.values())
         list(
             map(
                 lambda x: x.updateH(
@@ -164,6 +163,7 @@ class DataCore(object):
         )
 
     def pre_filter(self, text):
+        # 1
         prog = re.compile("^(\\s*([A-Z]))")
         parts = text.split("\n")
         buffer = ""
@@ -175,6 +175,8 @@ class DataCore(object):
         return buffer
 
     def getTag(self, word, i):
+        # 2
+        # TODO convert the exception to do pattern matching
         try:
             w2 = word.replace(",", "")
             float(w2)
@@ -242,9 +244,9 @@ class DataCore(object):
         self.candidates[cand.unique_kw].tf += 1.0
 
 
-class composed_word(object):
+class composed_word:
     def __init__(self, terms):  # [ (tag, word, term_obj) ]
-        if terms == None:
+        if terms is None:
             self.start_or_end_stopwords = True
             self.tags = set()
             return
@@ -252,7 +254,7 @@ class composed_word(object):
         self.kw = " ".join([w[1] for w in terms])
         self.unique_kw = self.kw.lower()
         self.size = len(terms)
-        self.terms = [w[2] for w in terms if w[2] != None]
+        self.terms = [w[2] for w in terms if w[2] is not None]
         self.tf = 0.0
         self.integrity = 1.0
         self.H = 1.0
@@ -292,11 +294,11 @@ class composed_word(object):
         seen = set()
         features_cand = []
 
-        if doc_id != None:
+        if doc_id is not None:
             columns.append("doc_id")
             features_cand.append(doc_id)
 
-        if keys != None:
+        if keys is not None:
             if rel:
                 columns.append("rel")
                 if self.unique_kw in keys or isVirtual:
@@ -386,7 +388,7 @@ class composed_word(object):
                     pass
 
         tf_used = 1.0
-        if features == None or "KPF" in features:
+        if features is None or "KPF" in features:
             tf_used = self.tf
 
         if isVirtual:
@@ -424,14 +426,14 @@ class composed_word(object):
                 sum_H += term_base.H
                 prod_H *= term_base.H
         tf_used = 1.0
-        if features == None or "KPF" in features:
+        if features is None or "KPF" in features:
             tf_used = self.tf
         if isVirtual:
             tf_used = np.mean([term_obj.tf for term_obj in self.terms])
         self.H = prod_H / ((sum_H + 1) * tf_used)
 
 
-class single_word(object):
+class single_word:
     def __init__(self, unique, idx, graph):
         self.unique_term = unique
         self.id = idx
@@ -453,29 +455,29 @@ class single_word(object):
         self.pagerank = 1.0
 
     def updateH(self, maxTF, avgTF, stdTF, number_of_sentences, features=None):
-        """if features == None or "WRel" in features:
+        """if features is None or "WRel" in features:
         self.PL = self.WDL / maxTF
         self.PR = self.WDR / maxTF
         self.WRel = ( (0.5 + (self.PWL * (self.tf / maxTF) + self.PL)) + (0.5 + (self.PWR * (self.tf / maxTF) + self.PR)) )
         """
 
-        if features == None or "WRel" in features:
+        if features is None or "WRel" in features:
             self.PL = self.WDL / maxTF
             self.PR = self.WDR / maxTF
             self.WRel = (0.5 + (self.PWL * (self.tf / maxTF))) + (
                 0.5 + (self.PWR * (self.tf / maxTF))
             )
 
-        if features == None or "WFreq" in features:
+        if features is None or "WFreq" in features:
             self.WFreq = self.tf / (avgTF + stdTF)
 
-        if features == None or "WSpread" in features:
+        if features is None or "WSpread" in features:
             self.WSpread = len(self.occurs) / number_of_sentences
 
-        if features == None or "WCase" in features:
+        if features is None or "WCase" in features:
             self.WCase = max(self.tf_a, self.tf_n) / (1.0 + math.log(self.tf))
 
-        if features == None or "WPos" in features:
+        if features is None or "WPos" in features:
             self.WPos = math.log(math.log(3.0 + np.median(list(self.occurs.keys()))))
 
         self.H = (self.WPos * self.WRel) / (

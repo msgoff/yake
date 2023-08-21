@@ -5,6 +5,7 @@
 import click
 import yake
 from tabulate import tabulate
+import sys
 
 
 @click.command()
@@ -87,10 +88,10 @@ def keywords(
         print(
             "You should specify either an input file or direct text input, but not both!"
         )
-        exit(1)
+        sys.exit(1)
     elif not text_input and not input_file:
         print("You should specify either an input file or direct text input")
-        exit(1)
+        sys.exit(1)
     else:
         if text_input:
             run_yake(text_input)

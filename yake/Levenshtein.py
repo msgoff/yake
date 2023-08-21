@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class Levenshtein(object):
+class Levenshtein:
     @staticmethod
     def __ratio(distance, str_length):
         return 1 - float(distance) / float(str_length)

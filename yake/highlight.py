@@ -4,7 +4,7 @@ DEFAULT_HIGHLIGHT_PRE = "<kw>"
 DEFAULT_HIGHLIGHT_POST = "</kw>"
 
 
-class TextHighlighter(object):
+class TextHighlighter:
     def __init__(
         self,
         max_ngram_size,

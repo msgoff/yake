@@ -2,7 +2,6 @@
 
 """Main module."""
 
-import string
 import os
 import jellyfish
 from .Levenshtein import Levenshtein
@@ -10,7 +9,7 @@ from .Levenshtein import Levenshtein
 from .datarepresentation import DataCore
 
 
-class KeywordExtractor(object):
+class KeywordExtractor:
     def __init__(
         self,
         lan="en",
@@ -25,8 +24,8 @@ class KeywordExtractor(object):
         self.lan = lan
 
         dir_path = os.path.dirname(os.path.realpath(__file__))
-
-        local_path = os.path.join("StopwordsList", "stopwords_%s.txt" % lan[:2].lower())
+        language = lan[:2].lower()
+        local_path = os.path.join("StopwordsList", f"stopwords_{language}.txt")
 
         if os.path.exists(os.path.join(dir_path, local_path)) == False:
             local_path = os.path.join("StopwordsList", "stopwords_noLang.txt")
