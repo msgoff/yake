@@ -7,9 +7,8 @@ import string
 import math
 import jellyfish
 import re
-
 STOPWORD_WEIGHT = "bi"
-
+from time import time
 
 class DataCore:
     def __init__(
@@ -37,6 +36,7 @@ class DataCore:
         self._build(text, windowsSize, n)
 
     def build_candidate(self, candidate_string):
+        s = time()
         sentences_str = [
             w
             for w in split_contractions(web_tokenizer(candidate_string.lower()))
@@ -53,6 +53,7 @@ class DataCore:
             invalid_virtual_cand = composed_word(None)
             return invalid_virtual_cand
         virtual_cand = composed_word(candidate_terms)
+        print(time()-s)
         return virtual_cand
 
     # Build the datacore features
@@ -251,7 +252,7 @@ class composed_word:
             self.tags = set()
             return
         self.tags = set(["".join([w[0] for w in terms])])
-        self.kw = " ".join([w[1] for w in terms])
+        self.kw = " ".join(w[1] for w in terms)
         self.unique_kw = self.kw.lower()
         self.size = len(terms)
         self.terms = [w[2] for w in terms if w[2] is not None]
@@ -336,22 +337,22 @@ class composed_word:
                 (f_sum, f_prod, f_sum_prod) = self.get_composed_feature(
                     feature_name, discart_stopword=discart_stopword
                 )
-                tst,fname = ("n" if discart_stopword else "", feature_name)
-                print(tst,fname)
+                #tst,fname = ("n" if discart_stopword else "", feature_name)
+                #print(tst,fname)
                 columns.append(
                     "%ss_sum_K%s" % ("n" if discart_stopword else "", feature_name)
                 )
                 features_cand.append(f_sum)
 
-                tst,fname = ("n" if discart_stopword else "", feature_name)
-                print(tst,fname)
+                #tst,fname = ("n" if discart_stopword else "", feature_name)
+                #print(tst,fname)
                 columns.append(
                     "%ss_prod_K%s" % ("n" if discart_stopword else "", feature_name)
                 )
                 features_cand.append(f_prod)
 
-                tst,fname = ("n" if discart_stopword else "", feature_name)
-                print(tst,fname)
+                #tst,fname = ("n" if discart_stopword else "", feature_name)
+                #print(tst,fname)
                 columns.append(
                     "%ss_sum_prod_K%s" % ("n" if discart_stopword else "", feature_name)
                 )
