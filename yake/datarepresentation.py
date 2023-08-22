@@ -336,16 +336,22 @@ class composed_word:
                 (f_sum, f_prod, f_sum_prod) = self.get_composed_feature(
                     feature_name, discart_stopword=discart_stopword
                 )
+                tst,fname = ("n" if discart_stopword else "", feature_name)
+                print(tst,fname)
                 columns.append(
                     "%ss_sum_K%s" % ("n" if discart_stopword else "", feature_name)
                 )
                 features_cand.append(f_sum)
 
+                tst,fname = ("n" if discart_stopword else "", feature_name)
+                print(tst,fname)
                 columns.append(
                     "%ss_prod_K%s" % ("n" if discart_stopword else "", feature_name)
                 )
                 features_cand.append(f_prod)
 
+                tst,fname = ("n" if discart_stopword else "", feature_name)
+                print(tst,fname)
                 columns.append(
                     "%ss_sum_prod_K%s" % ("n" if discart_stopword else "", feature_name)
                 )

@@ -48,9 +48,9 @@ class KeywordExtractor:
         self.dedupLim = dedupLim
         self.features = features
         self.windowsSize = windowsSize
-        if dedupFunc == "jaro_winkler" or dedupFunc == "jaro":
+        if dedupFunc in ("jaro_winkler","jaro"):
             self.dedu_function = self.jaro
-        elif dedupFunc.lower() == "sequencematcher" or dedupFunc.lower() == "seqm":
+        elif dedupFunc.lower() in ("sequencematcher","seqm"):
             self.dedu_function = self.seqm
         else:
             self.dedu_function = self.levs
